@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, ActionSheetController } from 'ionic-angular';
 import { TaskDetailsPage } from '../task-details/task-details';
 import { task } from '../../app/models/task';
+import { TaskFormPage } from '../task-form/task-form';
 
 @Component({
   selector: 'page-home',
@@ -17,7 +18,7 @@ export class HomePage {
    
       
   }
-//  id: 1, title:"Go To supermarket" , description:"go to buy choacolate" , dueDate:22/3/2019 , catID:1
+  
   ionViewDidLoad() {
 
     this.toDotasks = [
@@ -27,8 +28,9 @@ export class HomePage {
     ]
   
   }
+
   showTaskForm() {
-    alert('n');
+    this.navCtrl.push(TaskFormPage,{task:null});
   }
 
   toDoMenu(tasktodo) {
@@ -44,17 +46,21 @@ export class HomePage {
         },{
           text: 'Edit Task',
           handler: () => {
-            console.log('Archive clicked');
+            this.navCtrl.push(TaskFormPage,{task:tasktodo})
           }
         },{
           text: 'Delete',
           role: 'delete',
           handler: () => {
-            console.log('Cancel clicked');
+            this.deleteTask(tasktodo.id);
           }
         }
       ]
     });
     actionSheet.present();
+  }
+
+  deleteTask(id : number) {
+   this.toDotasks = this.toDotasks.filter((t) => t.id != id);
   }
 }
