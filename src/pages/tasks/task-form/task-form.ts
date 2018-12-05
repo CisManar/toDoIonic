@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { task } from '../../app/models/task';
+import { task } from '../../../app/models/task';
 
 /**
  * Generated class for the TaskFormPage page.
@@ -43,13 +43,13 @@ export class TaskFormPage {
     if(this.tasktoEdit != null)  {
       this.isNew = false;
 
-      //fill form 
+      //fill form
 
       this.taskForm.controls['title'].setValue(this.tasktoEdit.title);
       this.taskForm.controls['description'].setValue(this.tasktoEdit.description);
       let curDate = new Date(this.tasktoEdit.dueDate).toISOString();
       this.taskForm.controls['dueDate'].setValue(curDate);
-      
+
     }
   }
   sendTask() {

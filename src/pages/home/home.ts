@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { NavController, ActionSheetController } from 'ionic-angular';
-import { TaskDetailsPage } from '../task-details/task-details';
 import { task } from '../../app/models/task';
-import { TaskFormPage } from '../task-form/task-form';
+import { TaskFormPage } from '../tasks/task-form/task-form';
+import { TaskDetailsPage } from '../tasks/task-details/task-details';
+import { CategorylistPage } from '../categories/categorylist/categorylist';
 
 @Component({
   selector: 'page-home',
@@ -15,10 +16,10 @@ export class HomePage {
   constructor(public navCtrl: NavController,
     private actionSheetCtrl:ActionSheetController) {
 
-   
-      
+
+
   }
-  
+
   ionViewDidLoad() {
 
     this.toDotasks = [
@@ -26,7 +27,7 @@ export class HomePage {
       {id:2 , title:"Go To friend" , description:"go to friend" , dueDate: new Date() , catID:3}
 
     ]
-  
+
   }
 
   showTaskForm() {
@@ -62,5 +63,10 @@ export class HomePage {
 
   deleteTask(id : number) {
    this.toDotasks = this.toDotasks.filter((t) => t.id != id);
+  }
+
+
+  goToCategories() {
+    this.navCtrl.push(CategorylistPage);
   }
 }

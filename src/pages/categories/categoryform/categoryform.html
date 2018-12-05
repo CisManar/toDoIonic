@@ -1,0 +1,31 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>{{formTitle}}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <form [formGroup]='catsForm' (onSubmit)='sendTask()'>
+    <ion-list>
+
+        <ion-item>
+          <ion-label floating>title</ion-label>
+          <ion-input type="text" formControlName="title"></ion-input>
+        </ion-item>
+    </ion-list>
+
+    <ion-list >
+        <ion-item>
+            <button ion-button color="secondary" outline  (click)='sendTask()'>Save</button>
+        </ion-item>
+
+    </ion-list>
+
+
+
+</form>
+</ion-content>

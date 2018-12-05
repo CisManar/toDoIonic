@@ -1,0 +1,29 @@
+
+<ion-header>
+
+  <ion-navbar color="secondary">
+    <ion-title>categories list</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only  (click)="showCatsForm(null)">
+        <ion-icon name="add-circle" class="white"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list>
+      <ion-navbar color="light">
+        <button ion-item *ngFor="let cat of categories">
+          {{ cat.title }}
+          <ion-buttons end>
+            <button ion-button icon-only  (click)="toDoMenu(todoTask)">
+                <ion-icon name="settings"></ion-icon>
+            </button>
+        </ion-buttons>
+        </button>
+      </ion-navbar>
+  </ion-list>
+</ion-content>

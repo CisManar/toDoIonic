@@ -7,19 +7,20 @@
       <button ion-button icon-only  (click)="showTaskForm(null)">
         <ion-icon name="add-circle" class="white"></ion-icon>
       </button>
+      <button ion-button (click)="goToCategories()"> Browse by Category </button>
     </ion-buttons>
   </ion-navbar>
-</ion-header> 
+</ion-header>
 
-<!-- 
+<!--
   #a0525200
 #9e9e9e1a
  -->
-<ion-content padding> 
+<ion-content padding>
 
   <div class="columnContainer">
       <ion-title>
-          To-Do Cards 
+          To-Do Cards
       </ion-title>
       <ion-card *ngFor="let todoTask of toDotasks">
           <ion-navbar color="light">
@@ -28,7 +29,7 @@
             <ion-label>{{todoTask.title}}</ion-label>
             <ion-checkbox color="dark" checked="true"></ion-checkbox>
           </ion-item>
-                    
+
           <ion-card-content >
             {{todoTask.dueDate | date :'	dd/MM/yyyy'}}
             <ion-buttons end>
@@ -40,10 +41,10 @@
         </ion-navbar>
       </ion-card>
   </div>
-    
+
   <div class="columnContainer">
       <ion-title>
-          Completed Tasks 
+          Completed Tasks
       </ion-title>
       <ion-card>
           <ion-navbar color="light">
@@ -57,7 +58,7 @@
                 <ion-icon name="settings"></ion-icon>
               </button>
           </ion-buttons>
-            
+
           </ion-card-content>
         </ion-navbar>
       </ion-card>
