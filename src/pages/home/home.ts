@@ -12,6 +12,7 @@ import { CategorylistPage } from '../categories/categorylist/categorylist';
 export class HomePage {
 
   toDotasks : task[] = [] ;
+  doneDasks : task[] = [] ;
 
   constructor(public navCtrl: NavController,
     private actionSheetCtrl:ActionSheetController) {
@@ -68,5 +69,10 @@ export class HomePage {
 
   goToCategories() {
     this.navCtrl.push(CategorylistPage);
+  }
+
+  doneTask(donetask : task) {
+    this.doneDasks.push(donetask);
+    this.toDotasks.filter(tasks=> tasks.id != donetask.id);
   }
 }

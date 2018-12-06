@@ -27,7 +27,7 @@
 
           <ion-item>
             <ion-label>{{todoTask.title}}</ion-label>
-            <ion-checkbox color="dark" checked="true"></ion-checkbox>
+            <ion-checkbox color="dark" checked="true" (ionChange)='doneTask(todoTask)'></ion-checkbox>
           </ion-item>
 
           <ion-card-content >
@@ -46,22 +46,19 @@
       <ion-title>
           Completed Tasks
       </ion-title>
-      <ion-card>
-          <ion-navbar color="light">
-          <ion-item>
-              <ion-label>title</ion-label>
-              <ion-checkbox color="dark" checked="true"></ion-checkbox>
-          </ion-item>
-          <ion-card-content >
-            <ion-buttons end>
-              <button ion-button icon-only  (click)="showTaskForm()">
-                <ion-icon name="settings"></ion-icon>
-              </button>
-          </ion-buttons>
+      <ion-card *ngFor="let doneTask of doneDasks">
+        <ion-navbar color="light">
 
-          </ion-card-content>
-        </ion-navbar>
-      </ion-card>
+        <ion-item>
+          <ion-label>{{doneTask.title}}</ion-label>
+          <ion-checkbox color="dark" checked="true" (ionChange)='doTask(doneTask)'></ion-checkbox>
+        </ion-item>
+
+        <ion-card-content >
+          {{doneTask.dueDate | date :'	dd/MM/yyyy'}}
+        </ion-card-content>
+      </ion-navbar>
+    </ion-card>
   </div>
 
 </ion-content>
