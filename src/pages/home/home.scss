@@ -6,10 +6,15 @@ page-home {
         color:#ffffff;
     }
 
-    .columnContainer {
-        width: 50%;
+    .catsCol {
+        width: 30%;
         float: left;
-    }    
+    }
+    .tasksCol {
+        width: 60%;
+        float: left;
+        margin-left: 2%;
+    } 
     .black {
         color: black;
     }

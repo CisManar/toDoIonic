@@ -20,6 +20,7 @@ export class CategoryformPage {
   formTitle : string;
   catsForm : FormGroup;
   cattoEdit : category;
+  categories : category[] = [];
 
   isNew : boolean = true;
 
@@ -31,11 +32,48 @@ export class CategoryformPage {
       //current cateogry
     });
 
-    this.formTitle = this.navParams.get('formTitle');
+
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad CategoryformPage');
+    this.cattoEdit = this.navParams.get('cat');
+    if(this.cattoEdit!=null) {
+      this.catsForm.controls['title'].setValue(this.cattoEdit.title);
+    }
+    console.log("cats from form before:",this.categories);
+
+
+   
+  }
+
+  sendTask() {
+    let cat : category = {ID:null , title: this.catsForm.controls['title'].value };
+   
+    this.addCat(cat);
+    if(this.cattoEdit==null) { //add
+      
+      cat.ID = 1;
+
+
+      this.categories.push(cat);
+
+      console.log("cats from form after:",this.categories);
+    }
+    else { //edit
+      let lastIndex = this.categories.length-1;
+      let max : number = this.categories[lastIndex].ID + 1;
+
+    }
+  }
+
+  addCat(cat:category) {
+    console.log("arr check", this.categories)
+    if(this.categories.length === 0) {
+      alert("empty")
+    } else {
+      alert("Full")
+    }
   }
 
 }

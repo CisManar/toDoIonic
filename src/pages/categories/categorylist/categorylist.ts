@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ActionSheetController } from 'ionic-angular';
-import { category } from '../../../app/models/category';
+import {  category } from '../../../app/models/category';
 import { CategoryformPage } from '../categoryform/categoryform';
-
+import { Storage } from '@ionic/storage'
 /**
  * Generated class for the CategorylistPage page.
  *
@@ -20,13 +20,19 @@ export class CategorylistPage {
   categories : category[] = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    private actionSheetCtrl:ActionSheetController) {
+    private actionSheetCtrl:ActionSheetController,
+    private storage : Storage) {
 
     this.categories = [
       {ID:1,title:"Daily"},
       {ID:2,title:"Monthly"},
       {ID:3,title:"Yearly"},
     ]
+    /*
+   storage.get('categories').then((cats)=>{
+     this.categories = cats;
+   })
+   */
   }
 
   ionViewDidLoad() {
@@ -37,19 +43,14 @@ export class CategorylistPage {
     const actionSheet = this.actionSheetCtrl.create({
       title: 'Category settings',
       buttons: [
+        
         {
-          text: 'Go to category tasks',
+          text: 'Edit Category',
           handler: () => {
-            this.navCtrl.push(CategoryformPage,{cat:category})
-          }
-        },
-        {
-          text: 'Edit Task',
-          handler: () => {
-            this.navCtrl.push(CategoryformPage,{cat:category})
+            this.showCatsForm(category);
           }
         },{
-          text: 'Delete',
+          text: 'Delete Category',
           role: 'delete',
           handler: () => {
             this.deleteCategory(category.ID);
@@ -62,5 +63,8 @@ export class CategorylistPage {
 
   deleteCategory(id : number) {
     this.categories = this.categories.filter((t) => t.ID != id);
+   }
+   showCatsForm(category : category) {
+      this.navCtrl.push(CategoryformPage,{cat:category})
    }
 }

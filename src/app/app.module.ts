@@ -11,6 +11,7 @@ import { TaskDetailsPage } from '../pages/tasks/task-details/task-details';
 import { TaskFormPage } from '../pages/tasks/task-form/task-form';
 import { CategorylistPage } from '../pages/categories/categorylist/categorylist';
 import { CategoryformPage } from '../pages/categories/categoryform/categoryform';
+import { IonicStorageModule } from '@ionic/storage';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { CategoryformPage } from '../pages/categories/categoryform/categoryform'
     IonicModule.forRoot(MyApp),
     FormsModule,
     ReactiveFormsModule,
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [

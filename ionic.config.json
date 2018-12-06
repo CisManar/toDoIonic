@@ -1,5 +1,7 @@
 {
   "name": "todoLocalStorage",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "ionic-angular"
 }

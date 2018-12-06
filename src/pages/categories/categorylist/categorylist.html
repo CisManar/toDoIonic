@@ -19,7 +19,7 @@
         <button ion-item *ngFor="let cat of categories">
           {{ cat.title }}
           <ion-buttons end>
-            <button ion-button icon-only  (click)="toDoMenu(todoTask)">
+            <button ion-button icon-only  (click)="toDoMenu(cat)">
                 <ion-icon name="settings"></ion-icon>
             </button>
         </ion-buttons>
