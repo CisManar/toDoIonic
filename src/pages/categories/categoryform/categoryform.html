@@ -16,6 +16,9 @@
           <ion-label floating>title</ion-label>
           <ion-input type="text" formControlName="title"></ion-input>
         </ion-item>
+        <div class="error" *ngIf="catsForm.get('title').hasError('required') && catsForm.get('title').touched">
+          Please input category title
+        </div>
     </ion-list>
 
     <ion-list >

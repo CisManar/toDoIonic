@@ -12,29 +12,41 @@
   <form [formGroup]='taskForm' (onSubmit)='sendTask()'>
       <ion-list>
 
+
+
           <ion-item>
             <ion-label floating>title</ion-label>
             <ion-input type="text" formControlName="title"></ion-input>
           </ion-item>
-        
+          <div class="error" *ngIf="taskForm.get('title').hasError('required') && taskForm.get('title').touched">
+            Please input task title
+          </div>
+
           <ion-item>
             <ion-label floating>description</ion-label>
             <ion-input type="text" formControlName="description"></ion-input>
           </ion-item>
+
+          <div class="error" *ngIf="taskForm.get('description').hasError('required') && taskForm.get('description').touched">
+            Please input task description
+          </div>
       </ion-list>
-  
+
       <ion-list >
           <ion-item>
               <ion-label>Start Date</ion-label>
               <ion-datetime displayFormat="MMM DD YYYY" formControlName="dueDate"></ion-datetime>
           </ion-item>
+          <div class="error" *ngIf="taskForm.get('dueDate').hasError('required') && taskForm.get('dueDate').touched">
+            Please input task due Date
+          </div>
           <ion-item>
               <button ion-button color="secondary" outline  (click)='sendTask()'>Save</button>
           </ion-item>
 
       </ion-list>
-        
-       
-          
+
+
+
   </form>
 </ion-content>
