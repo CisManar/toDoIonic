@@ -3,6 +3,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { category } from '../../../app/models/category';
 import { Storage } from '@ionic/storage';
+import { TaskListPage } from '../../Tasks/task-list/task-list';
+import { HomePage } from '../../home/home';
 /**
  * Generated class for the CategoryFormPage page.
  *
@@ -30,16 +32,14 @@ export class CategoryFormPage {
       });
       this.catToEdit = navParams.get('cat');
 
-      console.log('cat to edit',this.catToEdit)
+      this.storage.get("categories").then((cats)=>{
+        this.categories = cats;
+
+      })
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad CategoryFormPage');
-    this.categories = [
-      {ID:1,title:"Daily"},
-      {ID:2,title:"Monthly"},
-      {ID:3,title:"Yearly"},
-    ]
 
     this.fillForm();
   }
@@ -64,8 +64,11 @@ export class CategoryFormPage {
     if(this.catToEdit==null) {
       this.addNew()
     } else {
+
       this.editCat()
     }
+    this.navCtrl.push(HomePage);
+
   }
 
   addNew() {
@@ -73,29 +76,41 @@ export class CategoryFormPage {
     //if it's empty
     this.catToEdit = this.catsForm.value;
 
-    if(this.categories.length != 0) {
+    if(this.categories != null) {
 
       maxId = this.getMax()
+      this.catToEdit.ID = maxId;
+      this.categories.push(this.catToEdit);
+    }
+    else {
+
+
+      this.catToEdit.ID = maxId;
+      this.categories = [this.catToEdit];
+
+
     }
 
-    this.catToEdit.ID = maxId;
-    this.categories.push(this.catToEdit);
+
+    this.storage.set('categories',this.categories);
   }
   editCat() {
     let index = this.getCatIndex();
-    this.catToEdit = this.catsForm.value;
+    this.catToEdit.title = this.catsForm.controls['title'].value;
 
     this.categories[index].title = this.catToEdit.title;
+    this.storage.set('categories',this.categories);
 
   }
   getCatIndex() {
+
     for(let i=0;i<this.categories.length;i++) {
       if(this.catToEdit.ID == this.categories[i].ID) {
         return i;
       }
-      break;
 
     }
+
   }
 
   getMax(){

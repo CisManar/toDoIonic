@@ -3,6 +3,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { category } from '../../../app/models/category';
 import { task } from '../../../app/models/task';
+import { Storage } from '@ionic/storage';
+import { HomePage } from '../../home/home';
 
 @IonicPage()
 @Component({
@@ -15,18 +17,13 @@ export class TaskFormPage {
 
   testDate: Date = new Date();
 
-  tasks : task [] = [
-    {id:1,title:"go to gym",description:"dddd",dueDate:this.testDate,catID:1},
-    {id:2,title:"go to gymaa",description:"dddd",dueDate:this.testDate,catID:3},
-  ];
+  tasks : task [] = [];
 
-  categories : category[] = [
-    {ID:1,title:"MMM"},
-    {ID:3,title:"nn"}
+  categories : category[] = []
 
-  ]
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    private formbuilder : FormBuilder) {
+    private formbuilder : FormBuilder,
+    private storage : Storage) {
 
       this.taskForm = formbuilder.group({
         title : ['',Validators.required],
@@ -37,6 +34,17 @@ export class TaskFormPage {
 
       this.taskToEdit = navParams.get('tas');
 
+      console.log('par task',this.taskToEdit)
+
+      this.storage.get("categories").then((cats)=>{
+        this.categories = cats;
+
+      })
+
+      this.storage.get("tasks").then((tasks)=>{
+        this.tasks = tasks;
+
+      })
   }
 
   ionViewDidLoad() {
@@ -65,24 +73,35 @@ export class TaskFormPage {
     } else {
       this.editTask();
     }
-
+    this.navCtrl.push(HomePage);
   }
 
   addNew() {
-
     let maxId = 1
-    //if it's empty
-    this.taskToEdit = this.taskForm.value;
 
-    if(this.categories.length != 0) {
+    this.taskToEdit = this.taskForm.value;
+    console.log(this.tasks)
+    if(this.tasks != null) {
+    //if it's empty
 
       maxId = this.getMax()
+      this.taskToEdit.id = maxId;
+      this.tasks.push(this.taskToEdit);
     }
 
-    this.taskToEdit.id = maxId;
-    this.tasks.push(this.taskToEdit);
+    else {
 
-    console.log(this.tasks)
+
+      this.taskToEdit.id = maxId;
+      this.tasks = [this.taskToEdit];
+
+
+    }
+
+
+
+    console.log('tt',this.taskToEdit)
+    this.storage.set('tasks',this.tasks);
   }
 
   editTask() {
@@ -94,7 +113,7 @@ export class TaskFormPage {
     this.tasks[index].dueDate = this.taskToEdit.dueDate;
     this.tasks[index].catID = this.taskToEdit.catID;
 
-    console.log('after edit' , this.tasks)
+    this.storage.set('tasks',this.tasks);
 
   }
 

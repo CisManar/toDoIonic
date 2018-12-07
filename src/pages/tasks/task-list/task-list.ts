@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ActionSheetController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ActionSheetController, AlertController } from 'ionic-angular';
 import { category } from '../../../app/models/category';
 import { CategoryFormPage } from '../../Categories/category-form/category-form';
 import { task } from '../../../app/models/task';
 import { TaskFormPage } from '../task-form/task-form';
 import { TaskDetailsPage } from '../task-details/task-details';
+import { Storage } from '@ionic/storage';
 
 
 @IonicPage()
@@ -13,22 +14,29 @@ import { TaskDetailsPage } from '../task-details/task-details';
   templateUrl: 'task-list.html',
 })
 export class TaskListPage {
-  categories : category[] = [
-    {ID:1,title:"MMM"},
-    {ID:3,title:"nn"}
-
-  ]
+  categories = []
 
   testDate: Date = new Date();
   tasks : task[] = [];
 
-  tasksOriginal : task [] = [
-    {id:1,title:"go to gym",description:"dddd",dueDate:this.testDate,catID:1},
-    {id:2,title:"go to gymaa",description:"dddd",dueDate:this.testDate,catID:3},
-  ]
+  tasksOriginal : task [] = [];
+
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    private actionSheetCtrl : ActionSheetController) {
-    this.tasks = this.tasksOriginal;
+    private actionSheetCtrl : ActionSheetController,
+    private storage : Storage,
+    private alertCtrl : AlertController) {
+
+
+
+    this.storage.get("categories").then((cats)=>{
+      this.categories = cats;
+
+    })
+
+    this.storage.get("tasks").then((tasks)=>{
+      this.tasksOriginal = tasks;
+      this.tasks = this.tasksOriginal;
+    })
   }
 
   ionViewDidLoad() {
@@ -39,7 +47,11 @@ export class TaskListPage {
     this.navCtrl.push(CategoryFormPage,{cat:cat});
   }
   showTaskForm(tas : task) {
-    this.navCtrl.push(TaskFormPage,{tas:tas});
+    if(this.categories == null) {
+      this.presentAlert();
+      return;
+    }
+   this.navCtrl.push(TaskFormPage,{tas:tas});
   }
 
   selectCat(id:number) {
@@ -64,14 +76,51 @@ export class TaskListPage {
           text: 'Delete',
           role: 'delete',
           handler: () => {
-            this.deleteTask(tasktodo.id);
+            this.presentConfirm(tasktodo.id);
           }
         }
       ]
     });
     actionSheet.present();
   }
+
   deleteTask(id : number) {
     this.tasks = this.tasksOriginal.filter((t) => t.id != id);
+    this.storage.set("tasks",this.tasks);
    }
+
+  presentConfirm(taskID) {
+    let alert = this.alertCtrl.create({
+      title: 'Do you want to DELETE this Category?',
+      message: 'you will be unabled to get it again ! ',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            return;
+          }
+        },
+        {
+          text: 'I\'m sure',
+          handler: () => {
+            this.deleteTask(taskID)
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+  presentAlert() {
+    let alert = this.alertCtrl.create({
+      title: 'Error!',
+      subTitle: 'you can\'t add task before add at least one category',
+      buttons: ['ok']
+    });
+    alert.present();
+  }
+
+  resetFilter() {
+    this.tasks = this.tasksOriginal;
+  }
 }
