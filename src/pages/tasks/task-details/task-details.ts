@@ -15,11 +15,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class TaskDetailsPage {
 
-  task : string;
-  showForm : boolean = false;
-
   constructor(public navCtrl: NavController, public navParams: NavParams) {
-    this.task = navParams.get("task");
   }
 
   ionViewDidLoad() {

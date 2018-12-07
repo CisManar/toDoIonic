@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ActionSheetController } from 'ionic-angular';
-import {  category } from '../../../app/models/category';
-import { CategoryformPage } from '../categoryform/categoryform';
-import { Storage } from '@ionic/storage'
+import { Storage } from '@ionic/storage';
+import { category } from '../../../app/models/category';
+import { CategoryFormPage } from '../category-form/category-form';
+
 /**
- * Generated class for the CategorylistPage page.
+ * Generated class for the CategoryListPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
@@ -12,38 +13,38 @@ import { Storage } from '@ionic/storage'
 
 @IonicPage()
 @Component({
-  selector: 'page-categorylist',
-  templateUrl: 'categorylist.html',
+  selector: 'page-category-list',
+  templateUrl: 'category-list.html',
 })
-export class CategorylistPage {
+export class CategoryListPage {
 
-  categories : category[] = [];
+  categories : category[];
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    private actionSheetCtrl:ActionSheetController,
-    private storage : Storage) {
+    private storage : Storage,
+    private actionSheetCtrl: ActionSheetController) {
 
-    this.categories = [
-      {ID:1,title:"Daily"},
-      {ID:2,title:"Monthly"},
-      {ID:3,title:"Yearly"},
-    ]
-    /*
-   storage.get('categories').then((cats)=>{
-     this.categories = cats;
-   })
-   */
+      this.categories = [
+        {ID:1,title:"Daily"},
+        {ID:2,title:"Monthly"},
+        {ID:3,title:"Yearly"},
+      ]
+      /*
+      this.storage.get("categories").then((cats)=>{
+        this.categories = cats;
+
+      })
+      */
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad CategorylistPage');
+    console.log('ionViewDidLoad CategoryListPage');
   }
-
   toDoMenu(category) {
     const actionSheet = this.actionSheetCtrl.create({
       title: 'Category settings',
       buttons: [
-        
+
         {
           text: 'Edit Category',
           handler: () => {
@@ -65,6 +66,6 @@ export class CategorylistPage {
     this.categories = this.categories.filter((t) => t.ID != id);
    }
    showCatsForm(category : category) {
-      this.navCtrl.push(CategoryformPage,{cat:category})
+      this.navCtrl.push(CategoryFormPage,{cat:category})
    }
 }

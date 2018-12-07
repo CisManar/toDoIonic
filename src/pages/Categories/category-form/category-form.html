@@ -1,14 +1,14 @@
+
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>{{formTitle}}</ion-title>
+  <ion-navbar color="secondary">
+    <ion-title>category Form</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-
   <form [formGroup]='catsForm'>
     <ion-list>
 
@@ -23,7 +23,7 @@
 
     <ion-list >
         <ion-item>
-            <button ion-button color="secondary" outline  (click)='sendTask()'>Save</button>
+            <button ion-button color="secondary" outline  (click)='sendCat()'>Save</button>
         </ion-item>
 
     </ion-list>
