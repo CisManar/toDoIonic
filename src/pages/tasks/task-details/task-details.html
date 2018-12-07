@@ -6,13 +6,24 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>taskDetails</ion-title>
+  <ion-navbar color="primary">
+    <ion-title>{{task.title}} Details</ion-title>
   </ion-navbar>
 
 </ion-header>
 
-
 <ion-content padding>
-
+  <div class="container">
+    <ion-card>
+      <ion-card-header>
+        {{task.title}} || {{catName}}
+      </ion-card-header>
+      <ion-card-content>
+        <b>{{task.description}}</b>
+        <br>
+        {{task.dueDate | date :'	dd/MM/yyyy'}}
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>
+
