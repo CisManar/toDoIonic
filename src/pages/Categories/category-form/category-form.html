@@ -1,8 +1,14 @@
-
 <ion-header>
 
   <ion-navbar color="secondary">
     <ion-title>category Form</ion-title>
+
+    <ion-buttons end>
+      <button ion-button icon-only (click)="sendCat()">
+        <ion-icon name="checkmark"></ion-icon>
+      </button>
+    </ion-buttons>
+
   </ion-navbar>
 
 </ion-header>
@@ -10,25 +16,12 @@
 
 <ion-content padding>
   <form [formGroup]='catsForm'>
-    <ion-list>
-
-        <ion-item>
-          <ion-label floating>title</ion-label>
-          <ion-input type="text" formControlName="title"></ion-input>
-        </ion-item>
-        <div class="error" *ngIf="catsForm.get('title').hasError('required') && catsForm.get('title').touched">
-          Please input category title
-        </div>
-    </ion-list>
-
-    <ion-list >
-        <ion-item>
-            <button ion-button color="secondary" outline  (click)='sendCat()'>Save</button>
-        </ion-item>
-
-    </ion-list>
-
-
-
-</form>
+    <ion-item>
+      <ion-label floating>title</ion-label>
+      <ion-input type="text" formControlName="title"></ion-input>
+    </ion-item>
+    <div class="error" *ngIf="catsForm.get('title').hasError('required') && catsForm.get('title').touched">
+      Please input category title
+    </div>
+  </form>
 </ion-content>

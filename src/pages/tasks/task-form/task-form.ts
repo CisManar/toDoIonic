@@ -3,8 +3,9 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { category } from '../../../app/models/category';
 import { task } from '../../../app/models/task';
-import { Storage } from '@ionic/storage';
-import { HomePage } from '../../home/home';
+import Lockr from 'lockr';
+import { CategoryListPage } from '../../Categories/category-list/category-list';
+import { TaskListPage } from '../task-list/task-list';
 
 @IonicPage()
 @Component({
@@ -14,37 +15,33 @@ import { HomePage } from '../../home/home';
 export class TaskFormPage {
   taskForm : FormGroup;
   taskToEdit : task;
-
-  testDate: Date = new Date();
+  catid : number;
 
   tasks : task [] = [];
 
-  categories : category[] = []
+  categories : category[] = [];
+
+  todayDate : string = new Date().toString();
+  
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    private formbuilder : FormBuilder,
-    private storage : Storage) {
+    private formbuilder : FormBuilder) {
+      //(navCtrl.getPrevious().name)
 
       this.taskForm = formbuilder.group({
         title : ['',Validators.required],
         description : ['',Validators.required],
         dueDate : ['',Validators.required],
-        catID : ['',Validators.required]
       })
 
       this.taskToEdit = navParams.get('tas');
+      this.catid = navParams.get('catid');
 
-      console.log('par task',this.taskToEdit)
+      console.log("datetime : ", this.todayDate)
 
-      this.storage.get("categories").then((cats)=>{
-        this.categories = cats;
+      this.categories = Lockr.get('categories');
+      this.tasks = Lockr.get('tasks');
 
-      })
-
-      this.storage.get("tasks").then((tasks)=>{
-        this.tasks = tasks;
-
-      })
   }
 
   ionViewDidLoad() {
@@ -59,7 +56,6 @@ export class TaskFormPage {
     this.taskForm.controls['title'].setValue(this.taskToEdit.title);
     this.taskForm.controls['description'].setValue(this.taskToEdit.description);
     this.taskForm.controls['dueDate'].setValue(new Date(this.taskToEdit.dueDate).toISOString());
-    this.taskForm.controls['catID'].setValue(this.taskToEdit.catID);
 
   }
   sendTask() {
@@ -73,26 +69,29 @@ export class TaskFormPage {
     } else {
       this.editTask();
     }
-    this.navCtrl.push(HomePage);
+
+   // this.navCtrl.popToRoot();
+   this.navCtrl.push(TaskListPage,{catid:this.catid});
+    
   }
 
   addNew() {
+    
+
     let maxId = 1
 
     this.taskToEdit = this.taskForm.value;
-    console.log(this.tasks)
-    if(this.tasks != null) {
-    //if it's empty
-
+    if(this.tasks != undefined && this.tasks != null && this.tasks.length !=0) {
+      //if it's not empty
       maxId = this.getMax()
       this.taskToEdit.id = maxId;
+      this.taskToEdit.catID = this.catid;
       this.tasks.push(this.taskToEdit);
     }
 
     else {
-
-
       this.taskToEdit.id = maxId;
+      this.taskToEdit.catID = this.catid
       this.tasks = [this.taskToEdit];
 
 
@@ -100,21 +99,26 @@ export class TaskFormPage {
 
 
 
-    console.log('tt',this.taskToEdit)
-    this.storage.set('tasks',this.tasks);
+
+    Lockr.set('tasks',this.tasks);
+
+ 
   }
 
   editTask() {
     let index = this.getCatIndex();
+    let taskid = this.taskToEdit.id;
+    let catid = this.taskToEdit.catID;
     this.taskToEdit = this.taskForm.value;
-
+    console.log('taskToEdit.id',taskid);
+    
+    this.tasks[index].id = taskid;
     this.tasks[index].title = this.taskToEdit.title;
     this.tasks[index].description = this.taskToEdit.description;
     this.tasks[index].dueDate = this.taskToEdit.dueDate;
-    this.tasks[index].catID = this.taskToEdit.catID;
+    this.tasks[index].catID = catid;
 
-    this.storage.set('tasks',this.tasks);
-
+    Lockr.set('tasks',this.tasks);
   }
 
   getMax(){
@@ -126,12 +130,11 @@ export class TaskFormPage {
   }
 
   getCatIndex() {
+
     for(let i=0;i<this.tasks.length;i++) {
       if(this.taskToEdit.id == this.tasks[i].id) {
         return i;
       }
-      break;
-
     }
   }
 }

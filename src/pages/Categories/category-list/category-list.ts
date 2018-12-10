@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ActionSheetController, AlertController } from 'ionic-angular';
-import { Storage } from '@ionic/storage';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { category } from '../../../app/models/category';
 import { CategoryFormPage } from '../category-form/category-form';
 import { task } from '../../../app/models/task';
+import { TaskListPage } from '../../Tasks/task-list/task-list';
+import Lockr from 'lockr';
 
 /**
  * Generated class for the CategoryListPage page.
@@ -19,50 +20,20 @@ import { task } from '../../../app/models/task';
 })
 export class CategoryListPage {
 
-  categories : category[];
-  tasks : task[] ;
+  categories : category[] = [];
+  tasks : task[] = [];
+
+  cat : category;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    private storage : Storage,
-    private actionSheetCtrl: ActionSheetController,
-    private alertCtrl : AlertController) {
-
-
-
-      this.storage.get("categories").then((cats)=>{
-        this.categories = cats;
-
-      })
-
-      this.storage.get("tasks").then((tasks)=>{
-        this.tasks = tasks;
-      })
-
+    private alertCtrl : AlertController,
+    ) {
+     Lockr.get('categories')? this.categories = Lockr.get('categories') : 0;
+     Lockr.get('tasks')? this.tasks = Lockr.get('tasks') : 0;
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad CategoryListPage');
-  }
-  toDoMenu(category) {
-    const actionSheet = this.actionSheetCtrl.create({
-      title: 'Category settings',
-      buttons: [
-
-        {
-          text: 'Edit Category',
-          handler: () => {
-            this.showCatsForm(category);
-          }
-        },{
-          text: 'Delete Category',
-          role: 'delete',
-          handler: () => {
-            this.presentConfirm(category.ID);
-          }
-        }
-      ]
-    });
-    actionSheet.present();
   }
   presentConfirm(catID) {
     let alert = this.alertCtrl.create({
@@ -86,16 +57,22 @@ export class CategoryListPage {
     });
     alert.present();
   }
-
   deleteCategory(id : number) {
+
     this.categories = this.categories.filter((t) => t.ID != id); // delete category
 
-    this.tasks = this.tasks.filter((t) => t.catID != id); // delete tasks belong to category
+    if(this.tasks != null) {
+      this.tasks = this.tasks.filter((t) => t.catID != id); // delete tasks belong to category
+    }
 
-    this.storage.set('categories',this.categories);
-    this.storage.set('tasks',this.tasks);
+    Lockr.set('categories',this.categories);
+    Lockr.set('tasks',this.tasks);
+
    }
-   showCatsForm(category : category) {
-      this.navCtrl.push(CategoryFormPage,{cat:category})
-   }
+  showCatsForm(category : category) {
+    this.navCtrl.push(CategoryFormPage,{cat:category})
+  }
+  categoryTasks(catid : number) {
+    this.navCtrl.push(TaskListPage,{catid:catid});
+  }
 }

@@ -1,15 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams,AlertController } from 'ionic-angular';
 import { task } from '../../../app/models/task';
-import { Storage } from '@ionic/storage';
 import { category } from '../../../app/models/category';
-
-/**
- * Generated class for the TaskDetailsPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import Lockr from 'lockr';
+import { TaskFormPage } from '../task-form/task-form';
+import { TaskListPage } from '../task-list/task-list';
 
 @IonicPage()
 @Component({
@@ -20,22 +15,29 @@ export class TaskDetailsPage {
 
   task : task;
   categories : category[];
-
+  tasks : task[] = [];
+  taskID : number = null; 
+  catid : number = null;
   catName : string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    private storage:Storage) {
+    private alertCtrl : AlertController) {
+
     this.task = navParams.get('tas')
 
-    this.storage.get("categories").then((cats)=>{
-      this.categories = cats;
-      this.catName = this.getCat();
-
-    })
+    this.taskID = this.task.id;
+    this.catid = this.task.catID;
+    this.tasks = Lockr.get('tasks');
+    this.categories = Lockr.get('categories');
+    this.catName = this.getCat();
+    
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad TaskDetailsPage');
+
+    console.log('inittask', typeof(task))
+
   }
   getCat() {
 
@@ -47,4 +49,42 @@ export class TaskDetailsPage {
       }
 
   }
+
+  presentConfirm() {
+    let alert = this.alertCtrl.create({
+      title: 'Do you want to DELETE this task?',
+      message: 'you will be unabled to get it again ! ',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            return;
+          }
+        },
+        {
+          text: 'I\'m sure',
+          handler: () => {
+            this.deleteTask(this.taskID)
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+  deleteTask(id : number) {
+    console.log('task deleteTask form', this.task);
+    console.log('all tasks ', this.tasks);
+    this.tasks = this.tasks.filter((t) => t.id != id);
+    Lockr.set("tasks",this.tasks);
+    this.navCtrl.push(TaskListPage,{catid:this.catid});
+
+ 
+
+  }
+  showTaskForm() {
+    console.log('task to form', this.task);
+   this.navCtrl.push(TaskFormPage,{tas:this.task,catid:this.task.catID});
+  }
+
 }

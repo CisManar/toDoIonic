@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ActionSheetController, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { category } from '../../../app/models/category';
 import { CategoryFormPage } from '../../Categories/category-form/category-form';
 import { task } from '../../../app/models/task';
 import { TaskFormPage } from '../task-form/task-form';
 import { TaskDetailsPage } from '../task-details/task-details';
-import { Storage } from '@ionic/storage';
+import Lockr from 'lockr';
+import { createDirective } from '@angular/compiler/src/core';
+import { CategoryListPage } from '../../Categories/category-list/category-list';
 
 
 @IonicPage()
@@ -14,84 +16,67 @@ import { Storage } from '@ionic/storage';
   templateUrl: 'task-list.html',
 })
 export class TaskListPage {
-  categories = []
+  categories : category[] = []
 
   testDate: Date = new Date();
   tasks : task[] = [];
+  catid : number;
+  displayNoCards = true;
 
-  tasksOriginal : task [] = [];
+  categoryName : string = "cat cat ";
+
+
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    private actionSheetCtrl : ActionSheetController,
-    private storage : Storage,
     private alertCtrl : AlertController) {
 
 
+    this.categories = Lockr.get('categories');
+    this.tasks = Lockr.get('tasks');
 
-    this.storage.get("categories").then((cats)=>{
-      this.categories = cats;
+    this.catid = this.navParams.get('catid');
 
-    })
+    let cat = this.categories.find((data)=> data.ID == this.catid);
 
-    this.storage.get("tasks").then((tasks)=>{
-      this.tasksOriginal = tasks;
-      this.tasks = this.tasksOriginal;
-    })
+    this.categoryName = cat.title;
+    console.log("categoryName : ", this.categoryName)
+    this.selectCat(this.catid)
+
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad TaskListPage');
+
   }
 
-  showCatsForm(cat : category) {
-    this.navCtrl.push(CategoryFormPage,{cat:cat});
-  }
+
   showTaskForm(tas : task) {
+    
     if(this.categories == null) {
-      this.presentAlert();
       return;
     }
-   this.navCtrl.push(TaskFormPage,{tas:tas});
+   this.navCtrl.push(TaskFormPage,{tas:tas,catid:this.catid});
   }
 
   selectCat(id:number) {
-    this.tasks = this.tasksOriginal.filter((tas)=> tas.catID == id )
-  }
-  toDoMenu(tasktodo) {
-    const actionSheet = this.actionSheetCtrl.create({
-      title: 'Task settings',
-      buttons: [
-        {
-          text: 'See Details',
-          role: 'details',
-          handler: () => {
-            this.navCtrl.push(TaskDetailsPage,{tas:tasktodo})
-          }
-        },{
-          text: 'Edit Task',
-          handler: () => {
-            this.navCtrl.push(TaskFormPage,{tas:tasktodo})
-          }
-        },{
-          text: 'Delete',
-          role: 'delete',
-          handler: () => {
-            this.presentConfirm(tasktodo.id);
-          }
-        }
-      ]
-    });
-    actionSheet.present();
+    if(this.tasks != null) {
+
+      this.tasks = this.tasks.filter((tas)=> tas.catID == id )
+      this.displayNoCards = !this.displayNoCards;
+
+    }
+
   }
 
   deleteTask(id : number) {
-    this.tasks = this.tasksOriginal.filter((t) => t.id != id);
-    this.storage.set("tasks",this.tasks);
-   }
+    this.tasks = this.tasks.filter((t) => t.id != id);
+    Lockr.set("tasks",this.tasks);
+    this.navCtrl.push(TaskListPage,{catid:this.catid});
+  }
 
   presentConfirm(taskID) {
     let alert = this.alertCtrl.create({
-      title: 'Do you want to DELETE this Category?',
+      title: 'Do you want to DELETE this task?',
       message: 'you will be unabled to get it again ! ',
       buttons: [
         {
@@ -111,16 +96,11 @@ export class TaskListPage {
     });
     alert.present();
   }
-  presentAlert() {
-    let alert = this.alertCtrl.create({
-      title: 'Error!',
-      subTitle: 'you can\'t add task before add at least one category',
-      buttons: ['ok']
-    });
-    alert.present();
+  
+  viewTaskDetails(task) {
+    
+    console.log("task to send ",task)
+    this.navCtrl.push(TaskDetailsPage,{tas : task});
   }
 
-  resetFilter() {
-    this.tasks = this.tasksOriginal;
-  }
 }

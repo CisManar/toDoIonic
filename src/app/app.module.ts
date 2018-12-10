@@ -7,7 +7,6 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import {IonicStorageModule} from '@ionic/storage';
-import { TestPage } from '../pages/test/test';
 import { TaskDetailsPage } from '../pages/Tasks/task-details/task-details';
 import { TaskFormPage } from '../pages/Tasks/task-form/task-form';
 import { TaskListPage } from '../pages/Tasks/task-list/task-list';
@@ -19,7 +18,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   declarations: [
     MyApp,
     HomePage,
-    TestPage,
     TaskDetailsPage,
     TaskFormPage,
     TaskListPage,
@@ -37,7 +35,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   entryComponents: [
     MyApp,
     HomePage,
-    TestPage,
     TaskDetailsPage,
     TaskFormPage,
     TaskListPage,

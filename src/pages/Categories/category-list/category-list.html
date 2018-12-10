@@ -4,7 +4,7 @@
     <ion-title>categories list</ion-title>
     <ion-buttons end>
       <button ion-button icon-only  (click)="showCatsForm(null)">
-        <ion-icon name="add-circle" class="white"></ion-icon>
+        <ion-icon name="add" class="white"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
@@ -12,18 +12,23 @@
 </ion-header>
 
 
-<ion-content padding>
-  <ion-list>
-    <ion-navbar color="light">
-      <button ion-item *ngFor="let cat of categories">
-        {{ cat.title }}
-        <ion-buttons end>
-          <button ion-button icon-only  (click)="toDoMenu(cat)">
-              <ion-icon name="settings"></ion-icon>
-          </button>
-      </ion-buttons>
-      </button>
-    </ion-navbar>
-  </ion-list>
+<ion-content >
+    <ion-list>
+        <ion-item-sliding *ngFor="let cat of categories">
+          <ion-item (click)="categoryTasks(cat.ID)">
+            <h2>{{cat.title}}</h2>
+          </ion-item>
+          <ion-item-options side="right">
+            <button ion-button color="danger" (click)="presentConfirm(cat.ID)">
+              <ion-icon name="trash"></ion-icon>
+              Delete
+            </button>
+            <button ion-button color="primary" (click)="showCatsForm(cat)">
+              <ion-icon name="create"></ion-icon>
+              Edit
+            </button>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-list>
 
 </ion-content>

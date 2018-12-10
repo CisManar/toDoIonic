@@ -2,48 +2,44 @@
 
   <ion-navbar color="primary">
     <ion-title>task Form</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="sendTask()">
+        <ion-icon name="checkmark"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
   <form [formGroup]='taskForm'>
     <ion-list>
-        <ion-item>
-          <ion-label floating>title</ion-label>
-          <ion-input type="text" formControlName="title"></ion-input>
-        </ion-item>
-        <div class="error" *ngIf="taskForm.get('title').hasError('required') && taskForm.get('title').touched">
-          Please input task title
-        </div>
+      <ion-item>
+        <ion-label floating>title</ion-label>
+        <ion-input type="text" formControlName="title"></ion-input>
+      </ion-item>
+      <div class="error" *ngIf="taskForm.get('title').hasError('required') && taskForm.get('title').touched">
+        Please input task title
+      </div>
 
-        <ion-item>
-          <ion-label floating>description</ion-label>
-          <ion-input type="text" formControlName="description"></ion-input>
-        </ion-item>
+      <ion-item>
+        <ion-label floating>description</ion-label>
+        <ion-textarea type="text" formControlName="description"></ion-textarea>
+      </ion-item>
 
-        <div class="error" *ngIf="taskForm.get('description').hasError('required') && taskForm.get('description').touched">
-          Please input task description
-        </div>
-        <ion-item>
-            <ion-label>Due Date</ion-label>
-            <ion-datetime displayFormat="MMM DD YYYY" formControlName="dueDate"></ion-datetime>
-        </ion-item>
+      <div class="error" *ngIf="taskForm.get('description').hasError('required') && taskForm.get('description').touched">
+        Please input task description
+      </div>
+      <ion-item>
+        <ion-label>Due Date</ion-label>
+        <!-- <ion-input formControlName="dueDate" mindate="2018-12-12" type="date"></ion-input>  -->
+        <ion-datetime displayFormat="MMM DD YYYY" max="2050" min="2018" formControlName="dueDate"></ion-datetime>
+      </ion-item>
 
-        <ion-item>
-          <ion-label>Category</ion-label>
-          <ion-select formControlName="catID" cancelText="Cancle">
-            <ion-option *ngFor="let cat of categories" [value]="cat.ID">{{cat.title}}</ion-option>
-          </ion-select>
-        </ion-item>
-
-        <div class="error" *ngIf="taskForm.get('dueDate').hasError('required') && taskForm.get('dueDate').touched">
-          Please input task due Date
-        </div>
-        <ion-item>
-            <button ion-button color="secondary" outline  (click)='sendTask()'>Save</button>
-        </ion-item>
+      <div class="error" *ngIf="taskForm.get('dueDate').hasError('required') && taskForm.get('dueDate').touched">
+        Please input task due Date
+      </div>
     </ion-list>
 
   </form>

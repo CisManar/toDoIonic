@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { category } from '../../../app/models/category';
-import { Storage } from '@ionic/storage';
-import { TaskListPage } from '../../Tasks/task-list/task-list';
-import { HomePage } from '../../home/home';
+import { CategoryListPage } from '../category-list/category-list';
+import Lockr from 'lockr';
+
 /**
  * Generated class for the CategoryFormPage page.
  *
@@ -24,18 +24,15 @@ export class CategoryFormPage {
   catToEdit : category;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    private formbuiler : FormBuilder,
-    private storage : Storage) {
+    private formbuiler : FormBuilder) {
 
       this.catsForm = this.formbuiler.group({
         title : ['',Validators.required],
       });
       this.catToEdit = navParams.get('cat');
 
-      this.storage.get("categories").then((cats)=>{
-        this.categories = cats;
+      Lockr.get('categories')? this.categories = Lockr.get('categories') : 0;
 
-      })
   }
 
   ionViewDidLoad() {
@@ -53,53 +50,49 @@ export class CategoryFormPage {
   }
   sendCat() {
 
-    /*
-    this.storage.get('categories').then((cats) => {
-      this.categories = cats;
-    })
-    */
+   if(this.catsForm.invalid) {
+    return;
+    }
 
 
 //if the categore for add new or edit exist
     if(this.catToEdit==null) {
       this.addNew()
+     // alert('cat obj null, its new')
     } else {
-
+     // alert('cat obj insnt null , will delete')
       this.editCat()
     }
-    this.navCtrl.push(HomePage);
+    this.navCtrl.push(CategoryListPage);
 
   }
 
   addNew() {
+    console.log(this.categories)
     let maxId = 1
     //if it's empty
     this.catToEdit = this.catsForm.value;
 
-    if(this.categories != null) {
-
+    if(this.categories != null && this.categories.length != 0) {
       maxId = this.getMax()
       this.catToEdit.ID = maxId;
       this.categories.push(this.catToEdit);
     }
     else {
 
-
       this.catToEdit.ID = maxId;
       this.categories = [this.catToEdit];
-
-
     }
 
-
-    this.storage.set('categories',this.categories);
+   // console.log('cat from form:' , this.categories)
+    Lockr.set('categories',this.categories);
   }
   editCat() {
     let index = this.getCatIndex();
     this.catToEdit.title = this.catsForm.controls['title'].value;
 
     this.categories[index].title = this.catToEdit.title;
-    this.storage.set('categories',this.categories);
+    Lockr.set('categories',this.categories);
 
   }
   getCatIndex() {
