@@ -3,7 +3,7 @@
   <ion-navbar color="primary">
     <ion-title>task Form</ion-title>
     <ion-buttons end>
-      <button ion-button icon-only (click)="sendTask()">
+      <button ion-button icon-only (click)="save()">
         <ion-icon name="checkmark"></ion-icon>
       </button>
     </ion-buttons>
@@ -14,6 +14,8 @@
 
 <ion-content>
   <form [formGroup]='taskForm'>
+
+
     <ion-list>
       <ion-item>
         <ion-label floating>title</ion-label>
@@ -25,7 +27,7 @@
 
       <ion-item>
         <ion-label floating>description</ion-label>
-        <ion-textarea type="text" formControlName="description"></ion-textarea>
+        <ion-textarea class="textarea" type="text" formControlName="description" rows="10" autosize #description id="description"></ion-textarea>
       </ion-item>
 
       <div class="error" *ngIf="taskForm.get('description').hasError('required') && taskForm.get('description').touched">
@@ -40,7 +42,15 @@
       <div class="error" *ngIf="taskForm.get('dueDate').hasError('required') && taskForm.get('dueDate').touched">
         Please input task due Date
       </div>
+
+      <ion-item>
+        <ion-label>Tags</ion-label>
+        <ion-tags-input formControlName="tags" (onChange)="onChange($event)" [color]="'dark'"  [separatorStr]="','" [placeholder]="'add tag'"></ion-tags-input>
+      </ion-item>
     </ion-list>
+
+
+   
 
   </form>
 </ion-content>

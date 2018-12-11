@@ -13,6 +13,7 @@ import { TaskListPage } from '../pages/Tasks/task-list/task-list';
 import { CategoryFormPage } from '../pages/Categories/category-form/category-form';
 import { CategoryListPage } from '../pages/Categories/category-list/category-list';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {IonTagsInputModule} from "ionic-tags-input";
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    IonTagsInputModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

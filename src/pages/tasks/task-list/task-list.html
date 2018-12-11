@@ -1,11 +1,11 @@
 <ion-header>
 
   <ion-navbar color="danger">
-    <ion-title><h3>{{categoryName}} To-Do list</h3></ion-title>
+    <ion-title> {{categoryName}}  </ion-title>
 
 
     <ion-buttons end>
-      <button ion-button icon-only (click)="showTaskForm(null)">
+      <button ion-button icon-only (click)="addTask()">
         <ion-icon name="add" class="white"></ion-icon>
       </button>
     </ion-buttons>
@@ -14,7 +14,7 @@
 </ion-header>
 
 <ion-content>
-  <ion-card *ngIf="displayNoCards">
+  <ion-card *ngIf="tasks.length == 0">
     <ion-card-content>
       No Cards with this category
     </ion-card-content>
@@ -22,19 +22,19 @@
 
 
     <ion-list>
-        <ion-item-sliding *ngFor="let todoTask of tasks">
-          <ion-item (click)="viewTaskDetails(todoTask)">
-            <h2>{{todoTask.title}}</h2>
+        <ion-item-sliding *ngFor="let task of tasks">
+          <ion-item (click)="viewTaskDetails(task)">
+            <h2>{{task.title}}</h2>
             <p>
-              {{todoTask.dueDate | date :' dd-MM-yyyy'}}
+              {{task.dueDate | date :' dd-MM-yyyy'}}
             </p>
           </ion-item>
           <ion-item-options side="right">
-            <button ion-button color="danger" (click)="presentConfirm(todoTask.ID)">
+            <button ion-button color="danger" (click)="confirmDelete(task.id)">
               <ion-icon name="trash"></ion-icon>
               Delete
             </button>
-            <button ion-button color="primary" (click)="showTaskForm(todoTask)">
+            <button ion-button color="primary" (click)="editTask(task)">
               <ion-icon name="create"></ion-icon>
               Edit
             </button>

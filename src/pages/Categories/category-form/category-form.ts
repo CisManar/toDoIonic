@@ -1,16 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, App } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { category } from '../../../app/models/category';
 import { CategoryListPage } from '../category-list/category-list';
 import Lockr from 'lockr';
-
-/**
- * Generated class for the CategoryFormPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -19,61 +12,53 @@ import Lockr from 'lockr';
 })
 export class CategoryFormPage {
 
-  catsForm : FormGroup;
-  categories : category[] = [];
-  catToEdit : category;
+  categoryForm: FormGroup;
+  categories: category[] = [];
+  catToEdit: category = new category();
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    private formbuiler : FormBuilder) {
+    private formbuiler: FormBuilder,
+    public appCtrl : App) {
 
-      this.catsForm = this.formbuiler.group({
-        title : ['',Validators.required],
-      });
-      this.catToEdit = navParams.get('cat');
+    this.categoryForm = this.formbuiler.group({
+      title: ['', Validators.required],
+    });
 
-      Lockr.get('categories')? this.categories = Lockr.get('categories') : 0;
+    this.catToEdit = navParams.get('category');
+
+  //  Lockr.get('categories') ? this.categories = Lockr.get('categories') : 0;
+    this.categories = Lockr.get('categories') ? Lockr.get('categories') : [];
 
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad CategoryFormPage');
 
-    this.fillForm();
-  }
-
-  fillForm(){
-    if(this.catToEdit==null){
+    if (this.catToEdit == null) {
       return;
     }
-    this.catsForm.controls['title'].setValue(this.catToEdit.title);
+    this.categoryForm.controls['title'].setValue(this.catToEdit.title);
 
   }
+
   sendCat() {
 
-   if(this.catsForm.invalid) {
-    return;
+    if (this.categoryForm.invalid) {
+      return;
     }
-
-
-//if the categore for add new or edit exist
-    if(this.catToEdit==null) {
+    //if the categore for add new or edit exist
+    if (this.catToEdit == null) {
       this.addNew()
-     // alert('cat obj null, its new')
     } else {
-     // alert('cat obj insnt null , will delete')
-      this.editCat()
+      this.editCategory()
     }
-    this.navCtrl.push(CategoryListPage);
-
   }
 
   addNew() {
-    console.log(this.categories)
     let maxId = 1
     //if it's empty
-    this.catToEdit = this.catsForm.value;
+    this.catToEdit = this.categoryForm.value;
 
-    if(this.categories != null && this.categories.length != 0) {
+    if (this.categories != null && this.categories.length != 0) {
       maxId = this.getMax()
       this.catToEdit.ID = maxId;
       this.categories.push(this.catToEdit);
@@ -83,22 +68,25 @@ export class CategoryFormPage {
       this.catToEdit.ID = maxId;
       this.categories = [this.catToEdit];
     }
+    Lockr.set('categories', this.categories);
+    this.appCtrl.getRootNav().setRoot(CategoryListPage);
 
-   // console.log('cat from form:' , this.categories)
-    Lockr.set('categories',this.categories);
   }
-  editCat() {
+  
+  editCategory() {
     let index = this.getCatIndex();
-    this.catToEdit.title = this.catsForm.controls['title'].value;
+    this.catToEdit.title = this.categoryForm.controls['title'].value;
 
     this.categories[index].title = this.catToEdit.title;
-    Lockr.set('categories',this.categories);
+    Lockr.set('categories', this.categories);
+    this.appCtrl.getRootNav().setRoot(CategoryListPage);
 
   }
+
   getCatIndex() {
 
-    for(let i=0;i<this.categories.length;i++) {
-      if(this.catToEdit.ID == this.categories[i].ID) {
+    for (let i = 0; i < this.categories.length; i++) {
+      if (this.catToEdit.ID == this.categories[i].ID) {
         return i;
       }
 
@@ -106,11 +94,11 @@ export class CategoryFormPage {
 
   }
 
-  getMax(){
+  getMax() {
 
-    let id :number ;
-    let length = this.categories.length -1;
+    let id: number;
+    let length = this.categories.length - 1;
     id = this.categories[length].ID;
-    return id+1;
+    return id + 1;
   }
 }

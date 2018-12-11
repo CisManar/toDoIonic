@@ -1,7 +1,11 @@
 page-task-details {
-  ion-card{
-    height: 50%;
-    position: fixed;
-
+  .description{
+    white-space: pre-line;
+  }
+  .gray {
+    color : gray;
+  }
+  .right {
+    float: right;
   }
 }

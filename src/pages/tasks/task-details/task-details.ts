@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams,AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams,AlertController, Events } from 'ionic-angular';
 import { task } from '../../../app/models/task';
 import { category } from '../../../app/models/category';
 import Lockr from 'lockr';
 import { TaskFormPage } from '../task-form/task-form';
-import { TaskListPage } from '../task-list/task-list';
 
 @IonicPage()
 @Component({
@@ -17,26 +16,31 @@ export class TaskDetailsPage {
   categories : category[];
   tasks : task[] = [];
   taskID : number = null; 
-  catid : number = null;
+  categoryID : number = null;
   catName : string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    private alertCtrl : AlertController) {
+    private alertCtrl : AlertController,
+    public events : Events) {
 
-    this.task = navParams.get('tas')
+    this.task = navParams.get('task')
 
     this.taskID = this.task.id;
-    this.catid = this.task.catID;
+    this.categoryID = this.task.catID;
     this.tasks = Lockr.get('tasks');
     this.categories = Lockr.get('categories');
     this.catName = this.getCat();
+
+    events.subscribe('task:details',(tas,categoryID)=> {
+      this.task = tas;
+      this.categoryID = categoryID;
+    })
     
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad TaskDetailsPage');
 
-    console.log('inittask', typeof(task))
 
   }
   getCat() {
@@ -50,7 +54,7 @@ export class TaskDetailsPage {
 
   }
 
-  presentConfirm() {
+  confirmDelete() {
     let alert = this.alertCtrl.create({
       title: 'Do you want to DELETE this task?',
       message: 'you will be unabled to get it again ! ',
@@ -73,18 +77,13 @@ export class TaskDetailsPage {
     alert.present();
   }
   deleteTask(id : number) {
-    console.log('task deleteTask form', this.task);
-    console.log('all tasks ', this.tasks);
     this.tasks = this.tasks.filter((t) => t.id != id);
     Lockr.set("tasks",this.tasks);
-    this.navCtrl.push(TaskListPage,{catid:this.catid});
-
- 
+    this.navCtrl.pop();
 
   }
-  showTaskForm() {
-    console.log('task to form', this.task);
-   this.navCtrl.push(TaskFormPage,{tas:this.task,catid:this.task.catID});
+  editTask() {
+   this.navCtrl.push(TaskFormPage,{tas:this.task,categoryID:this.task.catID});
   }
 
 }

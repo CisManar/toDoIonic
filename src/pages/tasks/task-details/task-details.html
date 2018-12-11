@@ -2,12 +2,12 @@
 <ion-header>
 
   <ion-navbar color="primary">
-    <ion-title>{{task.title}} Details</ion-title>
+    <ion-title>{{task.title}}</ion-title>
     <ion-buttons end>
-      <button ion-button color="light" (click)="presentConfirm()">
+      <button ion-button color="light" (click)="confirmDelete()">
         <ion-icon name="trash"></ion-icon>
       </button>
-      <button ion-button color="light" (click)="showTaskForm()">
+      <button ion-button color="light" (click)="editTask()">
         <ion-icon name="create"></ion-icon>
       </button>
     </ion-buttons>
@@ -19,12 +19,16 @@
   <div class="container">
     <ion-card>
       <ion-card-header>
-        {{task.title}} || {{catName}}
+        <h6 class="gray right" end>{{task.dueDate | date :'dd-MM-yyyy'}}</h6> 
+
+        <h1> {{task.title}} </h1> 
+        
       </ion-card-header>
       <ion-card-content>
-        <b>{{task.description}}</b>
+        <h3>{{catName}}</h3>
+        <h5> <b class="description">{{task.description}}</b> </h5>
         <br>
-        {{task.dueDate | date :'	dd/MM/yyyy'}}
+        
       </ion-card-content>
     </ion-card>
   </div>

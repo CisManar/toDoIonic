@@ -3,7 +3,7 @@
   <ion-navbar color="secondary">
     <ion-title>categories list</ion-title>
     <ion-buttons end>
-      <button ion-button icon-only  (click)="showCatsForm(null)">
+      <button ion-button icon-only  (click)="addCategory()">
         <ion-icon name="add" class="white"></ion-icon>
       </button>
     </ion-buttons>
@@ -14,16 +14,16 @@
 
 <ion-content >
     <ion-list>
-        <ion-item-sliding *ngFor="let cat of categories">
-          <ion-item (click)="categoryTasks(cat.ID)">
-            <h2>{{cat.title}}</h2>
+        <ion-item-sliding *ngFor="let category of categories">
+          <ion-item (click)="categoryTasks(category.ID)">
+            <h2>{{category.title}}</h2>
           </ion-item>
           <ion-item-options side="right">
-            <button ion-button color="danger" (click)="presentConfirm(cat.ID)">
+            <button ion-button color="danger" (click)="confirmDelete(category.ID)">
               <ion-icon name="trash"></ion-icon>
               Delete
             </button>
-            <button ion-button color="primary" (click)="showCatsForm(cat)">
+            <button ion-button color="primary" (click)="EditCategory(category)">
               <ion-icon name="create"></ion-icon>
               Edit
             </button>
